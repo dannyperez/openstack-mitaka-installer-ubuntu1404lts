@@ -66,7 +66,6 @@ echo "Installing GLANCE Packages"
 #
 
 export DEBIAN_FRONTEND=noninteractive
-
 DEBIAN_FRONTEND=noninteractive aptitude -y install glance glance-api glance-common glance-registry
 
 echo "Done"
@@ -94,8 +93,8 @@ sync
 # Using python based tools, we proceed to configure glance services
 #
 
-crudini --set /etc/glance/glance-api.conf DEFAULT verbose False
-crudini --set /etc/glance/glance-api.conf DEFAULT debug False
+#crudini --set /etc/glance/glance-api.conf DEFAULT verbose False
+#crudini --set /etc/glance/glance-api.conf DEFAULT debug False
 crudini --set /etc/glance/glance-api.conf glance_store default_store file
 crudini --set /etc/glance/glance-api.conf glance_store stores "file,http"
 crudini --set /etc/glance/glance-api.conf glance_store filesystem_store_datadir /var/lib/glance/images/
@@ -104,8 +103,8 @@ crudini --set /etc/glance/glance-api.conf DEFAULT bind_port 9292
 crudini --set /etc/glance/glance-api.conf DEFAULT log_file /var/log/glance/api.log
 crudini --set /etc/glance/glance-api.conf DEFAULT backlog 4096
 crudini --set /etc/glance/glance-api.conf DEFAULT use_syslog False
- 
- 
+
+
 case $dbflavor in
 "mysql")
 	crudini --set /etc/glance/glance-api.conf database connection mysql+pymysql://$glancedbuser:$glancedbpass@$dbbackendhost:$mysqldbport/$glancedbname
@@ -116,10 +115,10 @@ case $dbflavor in
 	crudini --set /etc/glance/glance-registry.conf database connection postgresql+psycopg2://$glancedbuser:$glancedbpass@$dbbackendhost:$psqldbport/$glancedbname
 	;;
 esac
- 
- 
+
+
 glanceworkers=`grep processor.\*: /proc/cpuinfo |wc -l`
- 
+
 crudini --set /etc/glance/glance-api.conf DEFAULT workers $glanceworkers
 crudini --set /etc/glance/glance-api.conf DEFAULT registry_host 0.0.0.0
 crudini --set /etc/glance/glance-api.conf DEFAULT registry_port 9191
@@ -127,7 +126,7 @@ crudini --set /etc/glance/glance-api.conf DEFAULT registry_client_protocol http
 
 crudini --set /etc/glance/glance-api.conf DEFAULT delayed_delete False
 crudini --set /etc/glance/glance-api.conf DEFAULT scrub_time 43200
- 
+
 crudini --set /etc/glance/glance-api.conf database retry_interval 10
 crudini --set /etc/glance/glance-api.conf database idle_timeout 3600
 crudini --set /etc/glance/glance-api.conf database min_pool_size 1
@@ -147,7 +146,7 @@ then
 	crudini --set /etc/glance/glance-api.conf DEFAULT notification_driver messagingv2
 	crudini --set /etc/glance/glance-registry.conf DEFAULT notification_driver messagingv2
         crudini --set /etc/glance/glance-api.conf oslo_messaging_notifications driver messagingv2
-        crudini --set /etc/glance/glance-registry.conf oslo_messaging_notifications driver messagingv2	
+        crudini --set /etc/glance/glance-registry.conf oslo_messaging_notifications driver messagingv2
 fi
 
 case $brokerflavor in
@@ -164,7 +163,7 @@ case $brokerflavor in
 	crudini --set /etc/glance/glance-api.conf oslo_messaging_qpid qpid_protocol tcp
 	crudini --set /etc/glance/glance-api.conf oslo_messaging_qpid qpid_tcp_nodelay True
 	;;
- 
+
 "rabbitmq")
 	crudini --set /etc/glance/glance-api.conf DEFAULT notifier_strategy rabbitmq
 	crudini --set /etc/glance/glance-api.conf DEFAULT rabbit_host $messagebrokerhost
@@ -180,8 +179,8 @@ case $brokerflavor in
 	crudini --set /etc/glance/glance-api.conf oslo_messaging_rabbit rabbit_ha_queues false
 	;;
 esac
- 
- 
+
+
 crudini --set /etc/glance/glance-api.conf keystone_authtoken auth_uri http://$keystonehost:5000
 crudini --set /etc/glance/glance-api.conf keystone_authtoken auth_url http://$keystonehost:35357
 crudini --set /etc/glance/glance-api.conf keystone_authtoken auth_type password
@@ -191,10 +190,10 @@ crudini --set /etc/glance/glance-api.conf keystone_authtoken user_domain_name $k
 crudini --set /etc/glance/glance-api.conf keystone_authtoken project_name $keystoneservicestenant
 crudini --set /etc/glance/glance-api.conf keystone_authtoken username $glanceuser
 crudini --set /etc/glance/glance-api.conf keystone_authtoken password $glancepass
- 
+
 crudini --set /etc/glance/glance-api.conf paste_deploy flavor keystone
-crudini --set /etc/glance/glance-registry.conf paste_deploy flavor keystone 
- 
+crudini --set /etc/glance/glance-registry.conf paste_deploy flavor keystone
+
 crudini --set /etc/glance/glance-registry.conf DEFAULT verbose False
 crudini --set /etc/glance/glance-registry.conf DEFAULT debug False
 crudini --set /etc/glance/glance-registry.conf DEFAULT bind_host 0.0.0.0
@@ -202,11 +201,11 @@ crudini --set /etc/glance/glance-registry.conf DEFAULT bind_port 9191
 crudini --set /etc/glance/glance-registry.conf DEFAULT log_file /var/log/glance/registry.log
 crudini --set /etc/glance/glance-registry.conf DEFAULT backlog 4096
 crudini --set /etc/glance/glance-registry.conf DEFAULT use_syslog False
- 
+
 crudini --set /etc/glance/glance-registry.conf DEFAULT sql_idle_timeout 3600
 crudini --set /etc/glance/glance-registry.conf DEFAULT api_limit_max 1000
 crudini --set /etc/glance/glance-registry.conf DEFAULT limit_param_default 25
- 
+
 crudini --set /etc/glance/glance-registry.conf keystone_authtoken auth_uri http://$keystonehost:5000
 crudini --set /etc/glance/glance-registry.conf keystone_authtoken auth_url http://$keystonehost:35357
 crudini --set /etc/glance/glance-registry.conf keystone_authtoken auth_type password
@@ -216,7 +215,7 @@ crudini --set /etc/glance/glance-registry.conf keystone_authtoken user_domain_na
 crudini --set /etc/glance/glance-registry.conf keystone_authtoken project_name $keystoneservicestenant
 crudini --set /etc/glance/glance-registry.conf keystone_authtoken username $glanceuser
 crudini --set /etc/glance/glance-registry.conf keystone_authtoken password $glancepass
- 
+
 crudini --set /etc/glance/glance-cache.conf DEFAULT verbose False
 crudini --set /etc/glance/glance-cache.conf DEFAULT debug False
 crudini --set /etc/glance/glance-cache.conf DEFAULT log_file /var/log/glance/image-cache.log
@@ -229,7 +228,7 @@ crudini --set /etc/glance/glance-cache.conf DEFAULT registry_port 9191
 crudini --set /etc/glance/glance-cache.conf DEFAULT admin_tenant_name $keystoneservicestenant
 crudini --set /etc/glance/glance-cache.conf DEFAULT admin_user $glanceuser
 crudini --set /etc/glance/glance-cache.conf DEFAULT filesystem_store_datadir /var/lib/glance/images/
- 
+
 
 mkdir -p /var/lib/glance/image-cache/
 chown -R glance.glance /var/lib/glance/image-cache
@@ -290,6 +289,7 @@ then
         then
 		echo "Configuring Glance to use SWIFT as storage backend"
                 crudini --set /etc/glance/glance-api.conf glance_store default_store swift
+                crudini --set /etc/glance/glance-api.conf glance_store stores file,swift,http
 		crudini --set /etc/glance/glance-api.conf glance_store default_swift_reference ref1
                 # crudini --set /etc/glance/glance-api.conf glance_store swift_store_auth_address http://$keystonehost:5000/v2.0
                 # crudini --set /etc/glance/glance-api.conf glance_store swift_store_user $keystoneservicestenant:$swiftuser

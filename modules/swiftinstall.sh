@@ -10,7 +10,7 @@
 PATH=$PATH:/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin
 
 #
-# First, we source our config file and verify that some important proccess are 
+# First, we source our config file and verify that some important proccess are
 # already completed.
 #
 
@@ -208,7 +208,7 @@ crudini --set /etc/swift/swift.conf swift-hash swift_hash_path_suffix $(openssl 
 crudini --set /etc/swift/swift.conf swift-hash swift_hash_path_prefix $(openssl rand -hex 10)
 crudini --set /etc/swift/swift.conf "storage-policy:0" name Policy-0
 crudini --set /etc/swift/swift.conf "storage-policy:0" default yes
- 
+
 #swiftworkers=`grep processor.\*: /proc/cpuinfo |wc -l`
 swiftworkers="auto"
 
@@ -216,7 +216,7 @@ mkdir -p "/var/cache/swift"
 chmod 0700 /var/cache/swift
 chown -R swift:swift /var/cache/swift
 # chown -R root:swift /var/cache/swift
- 
+
 crudini --set /etc/swift/object-server.conf DEFAULT bind_ip $swifthost
 crudini --set /etc/swift/object-server.conf DEFAULT workers $swiftworkers
 crudini --set /etc/swift/object-server.conf DEFAULT swift_dir "/etc/swift"
@@ -375,9 +375,9 @@ echo ""
 echo "Swift RING Report follows (waiting 10 seconds while you see the report):"
 echo ""
 
-swift-ring-builder /etc/swift/account.builder 
-swift-ring-builder /etc/swift/container.builder 
-swift-ring-builder /etc/swift/object.builder 
+swift-ring-builder /etc/swift/account.builder
+swift-ring-builder /etc/swift/container.builder
+swift-ring-builder /etc/swift/object.builder
 
 sleep 10
 
